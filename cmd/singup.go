@@ -17,7 +17,7 @@ import (
 
 // Define the signup command
 var signupCmd = &cobra.Command{
-	Use:   "signup",
+	Use:   "sign-up",
 	Short: "Sign up for a Global Blackbox account",
 	Long:  `Interactively sign up for a Global Blackbox account by providing your email and selecting a subscription plan.`,
 	Run: func(cmd *cobra.Command, args []string) {

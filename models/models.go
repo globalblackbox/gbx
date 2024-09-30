@@ -9,7 +9,7 @@ type SignupPlan struct {
 type SignupRequest struct {
 	Email           string     `json:"email"`
 	Plan            SignupPlan `json:"plan"`
-	NumberOfTargets int        `json:"number_of_targets"`
+	NumberOfTargets int        `json:"number_of_targets,omitempty"`
 }
 
 type SignupResponse struct {
@@ -24,5 +24,5 @@ type Config struct {
 	APIKey          string     `yaml:"api_key"`
 	AccountID       string     `yaml:"account_id"`
 	Plan            SignupPlan `yaml:"plan"`
-	NumberOfTargets int        `yaml:"number_of_targets"`
+	NumberOfTargets int        `yaml:"number_of_targets,omitempty"`
 }
