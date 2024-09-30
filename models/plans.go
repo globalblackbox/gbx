@@ -2,7 +2,7 @@ package models
 
 // PlanDetails maps plan names to their detailed descriptions
 var PlanDetails = map[string]string{
-	"single-region": `Single-Region Plan:
+	"single-region": `single-region plan:
 
 	Description: Access to one probe per minute per target in a single region of your choice.
 	Ideal For: Monitoring services critical in a specific geographic location.
@@ -51,7 +51,7 @@ Middle east:
 - United Arab Emirates (uae.middle-east)
 `,
 
-	"all-continents": `All-Continents Plan:
+	"all-continents": `all-continents plan:
 
 Description: Access to one strategically selected region on each continent.
 Ideal For: Ensuring global availability and performance across major continents.
@@ -73,7 +73,7 @@ Included Regions:
 
 Number of Targets: Select the number of targets you wish to monitor across these regions.`,
 
-	"worldwide": `Worldwide Plan:
+	"worldwide": `worldwide plan:
 
 Description: Full access to all available regions across the globe.
 Ideal For: Comprehensive monitoring for services with a worldwide user base.
