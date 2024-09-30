@@ -6,24 +6,13 @@ import (
 	"os"
 	"path/filepath"
 
+	"globalblackbox.io/globalblackbox-cli/models"
+
 	"gopkg.in/yaml.v2"
 )
 
-// SignupPlan represents the subscription plan details
-type SignupPlan struct {
-	Name   string `json:"name" yaml:"name"`
-	Region string `json:"region,omitempty" yaml:"region,omitempty"`
-}
-
-// Config represents the structure of the configuration file
-type Config struct {
-	APIKey    string     `yaml:"api_key"`
-	AccountID string     `yaml:"account_id"`
-	Plan      SignupPlan `yaml:"plan"`
-}
-
 // SaveConfig saves the configuration to ~/.gbx/config.yaml
-func SaveConfig(config *Config) error {
+func SaveConfig(config *models.Config) error {
 	// Get the user's home directory
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
