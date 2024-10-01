@@ -1,4 +1,3 @@
-// models/models.go
 package models
 
 type SignupPlan struct {

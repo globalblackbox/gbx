@@ -1,7 +1,7 @@
 package main
 
 import (
-	"globalblackbox.io/globalblackbox-cli/cmd"
+	"globalblackbox.io/gbx/cmd"
 )
 
 func main() {
