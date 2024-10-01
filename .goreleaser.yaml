@@ -52,7 +52,7 @@ changelog:
 brews:
   - repository:
       owner: globalblackbox
-      name: globalblackbox/homebrew-tap
+      name: homebrew-tap
     commit_author:
       name: Victor Bogo
       email: victor@globalblackbox.io
