@@ -1,4 +1,4 @@
-module globalblackbox.io/globalblackbox-cli
+module globalblackbox.io/gbx
 
 go 1.23.1
 

@@ -12,7 +12,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
-	"globalblackbox.io/globalblackbox-cli/models"
+	"globalblackbox.io/gbx/models"
 )
 
 // Define the signup command
@@ -25,28 +25,20 @@ var signupCmd = &cobra.Command{
 	},
 }
 
-func init() {
-	// You can define flags and configuration settings here if needed in the future
-}
-
 // runSignup orchestrates the sign-up process
 func runSignup() {
-	// Welcome Message
 	welcomeStyle := lipgloss.NewStyle().
 		Bold(true).
 		Foreground(lipgloss.Color("#D3D3D3")) // Light Grey
 	fmt.Println(welcomeStyle.Render("Welcome to GBX Sign-Up CLI"))
 
-	// Display Pricing Information
 	displayPricingInfo()
 
-	// Display Plans Documentation Link
 	docStyle := lipgloss.NewStyle().
 		Italic(true).
 		Foreground(lipgloss.Color("#A9A9A9")) // Medium Grey
 	fmt.Println(docStyle.Render("For more information on subscription plans, visit: https://docs.globalblackbox.io/plans/\n"))
 
-	// Prompt for Email
 	email, err := promptEmail()
 	if err != nil {
 		exitWithError(err)
@@ -54,13 +46,11 @@ func runSignup() {
 
 	var planName string
 	for {
-		// Prompt for Subscription Plan
 		planName, err = promptPlan()
 		if err != nil {
 			exitWithError(err)
 		}
 
-		// Confirm the Selected Plan
 		confirmed, err := confirmPlan(planName)
 		if err != nil {
 			exitWithError(err)
@@ -69,7 +59,6 @@ func runSignup() {
 		if confirmed {
 			break
 		} else {
-			// User chose to re-select plan
 			fmt.Println("\n" + lipgloss.NewStyle().
 				Bold(true).
 				Foreground(lipgloss.Color("#696969")).
@@ -77,7 +66,6 @@ func runSignup() {
 		}
 	}
 
-	// If 'single-region', prompt for region
 	var region string
 	if planName == "single-region" {
 		region, err = promptRegion()
@@ -86,13 +74,11 @@ func runSignup() {
 		}
 	}
 
-	// Prompt for Number of Targets
 	numberOfTargets, err := promptNumberOfTargets()
 	if err != nil {
 		exitWithError(err)
 	}
 
-	// Construct Signup Request
 	signupReq := models.SignupRequest{
 		Email: email,
 		Plan: models.SignupPlan{
@@ -102,13 +88,11 @@ func runSignup() {
 		},
 	}
 
-	// Send Signup Request
 	response, err := sendSignupRequest(signupReq)
 	if err != nil {
 		exitWithError(err)
 	}
 
-	// Display Response
 	displayResponse(response)
 }
 
@@ -116,7 +100,7 @@ func runSignup() {
 func displayPricingInfo() {
 	pricingStyle := lipgloss.NewStyle().
 		Bold(true).
-		Foreground(lipgloss.Color("#A9A9A9")) // Medium Grey
+		Foreground(lipgloss.Color("#A9A9A9"))
 	fmt.Println(pricingStyle.Render("Pricing Structure:\n"))
 	fmt.Println(`- Available plans: single-region, all-continents, or worldwide.
 - Number of targets: The number of endpoints you wish to monitor.
@@ -176,14 +160,12 @@ func confirmPlan(planName string) (bool, error) {
 		return false, fmt.Errorf("no details found for the selected plan: %s", planName)
 	}
 
-	// Display Plan Details
 	planStyle := lipgloss.NewStyle().
 		Bold(true).
-		Foreground(lipgloss.Color("#A9A9A9")) // Medium Grey
+		Foreground(lipgloss.Color("#A9A9A9"))
 	fmt.Println("\n" + planStyle.Render("Selected Plan Details:\n"))
 	fmt.Println(description)
 
-	// Prompt for Confirmation
 	confirmPrompt := promptui.Select{
 		Label: "Do you want to proceed with this plan?",
 		Items: []string{"Confirm", "Re-select"},
@@ -207,7 +189,6 @@ func promptRegion() (string, error) {
 		if strings.TrimSpace(input) == "" {
 			return fmt.Errorf("region cannot be empty")
 		}
-		// Optionally, you can add more validation for region format
 		return nil
 	}
 
@@ -260,7 +241,7 @@ func promptNumberOfTargets() (int, error) {
 
 // sendSignupRequest sends the signup request to the API and returns the response
 func sendSignupRequest(req models.SignupRequest) (*models.SignupResponse, error) {
-	url := "https://api.globalblackbox.io/sign-up"
+	url := fmt.Sprintf("%s/sign-up", API_BASE_URL)
 
 	jsonData, err := json.Marshal(req)
 	if err != nil {
@@ -277,7 +258,6 @@ func sendSignupRequest(req models.SignupRequest) (*models.SignupResponse, error)
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		// Read response body for more details
 		var errorResp map[string]interface{}
 		if err := json.NewDecoder(resp.Body).Decode(&errorResp); err != nil {
 			return nil, fmt.Errorf("sign-up failed with status: %s", resp.Status)
@@ -295,10 +275,9 @@ func sendSignupRequest(req models.SignupRequest) (*models.SignupResponse, error)
 
 // displayResponse displays the API response in a user-friendly format
 func displayResponse(resp *models.SignupResponse) {
-	// Update styling to use grey shades
 	style := lipgloss.NewStyle().
 		Bold(true).
-		Foreground(lipgloss.Color("#A9A9A9")) // Medium Grey
+		Foreground(lipgloss.Color("#A9A9A9"))
 
 	fmt.Println("\n" + style.Render("Sign-Up Successful!\n"))
 
@@ -311,7 +290,6 @@ func displayResponse(resp *models.SignupResponse) {
 		fmt.Printf("%s: %s\n", style.Render("Region"), resp.Plan.Region)
 	}
 
-	// Save API key to config.yaml
 	config := &models.Config{
 		APIKey:    resp.APIKey,
 		AccountID: resp.AccountID,
@@ -319,28 +297,26 @@ func displayResponse(resp *models.SignupResponse) {
 			Name:   resp.Plan.Name,
 			Region: resp.Plan.Region,
 		},
-		NumberOfTargets: resp.NumberOfTargets, // Assuming API will eventually return this
+		NumberOfTargets: resp.NumberOfTargets,
 	}
 
 	if err := SaveConfig(config); err != nil {
 		errorStyle := lipgloss.NewStyle().
 			Bold(true).
-			Foreground(lipgloss.Color("#696969")) // Dark Grey
+			Foreground(lipgloss.Color("#696969"))
 		fmt.Fprintf(os.Stderr, "%s: %v\n", errorStyle.Render("Warning"), err)
 	} else {
 		fmt.Println(style.Render("\nAPI key has been saved to ~/.gbx/config.yaml"))
 	}
 
-	// Next Steps
 	nextStepsStyle := lipgloss.NewStyle().
 		Bold(true).
-		Foreground(lipgloss.Color("#D3D3D3")) // Light Grey
+		Foreground(lipgloss.Color("#D3D3D3"))
 	fmt.Println("\n" + nextStepsStyle.Render("Next Steps:"))
 	fmt.Println("1. Complete Subscription Payment by visiting the Stripe URL provided.")
 	fmt.Println("2. Secure your API Key for authenticating your Prometheus scrape jobs.")
 	fmt.Println("3. Configure Prometheus with your account details. Refer to the Prometheus Configuration documentation for guidance.\n")
 
-	// Support Information
 	supportStyle := lipgloss.NewStyle().
 		Italic(true).
 		Foreground(lipgloss.Color("#A9A9A9")) // Medium Grey
@@ -351,7 +327,7 @@ func displayResponse(resp *models.SignupResponse) {
 func exitWithError(err error) {
 	errorStyle := lipgloss.NewStyle().
 		Bold(true).
-		Foreground(lipgloss.Color("#696969")) // Dark Grey
+		Foreground(lipgloss.Color("#696969"))
 	fmt.Fprintf(os.Stderr, "%s: %v\n", errorStyle.Render("Error"), err)
 	os.Exit(1)
 }
