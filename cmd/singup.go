@@ -96,10 +96,10 @@ func runSignup() {
 	signupReq := models.SignupRequest{
 		Email: email,
 		Plan: models.SignupPlan{
-			Name:   planName,
-			Region: region,
+			Name:            planName,
+			Region:          region,
+			NumberOfTargets: numberOfTargets,
 		},
-		NumberOfTargets: numberOfTargets,
 	}
 
 	// Send Signup Request
