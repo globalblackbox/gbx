@@ -1,0 +1,60 @@
+# This is an example .goreleaser.yml file with some sensible defaults.
+# Make sure to check the documentation at https://goreleaser.com
+
+# The lines below are called `modelines`. See `:help modeline`
+# Feel free to remove those if you don't want/need to use them.
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=cnqoj
+
+version: 2
+project_name: gbx
+
+before:
+  hooks:
+    # You may remove this if you don't use go modules.
+    - go mod tidy
+    # you may remove this if you don't need go generate
+    - go generate ./...
+
+builds:
+  - id: gbx
+    main: .
+    binary: gbx
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    env:
+      - CGO_ENABLED=0
+    ldflags: |
+      -s -w
+
+archives:
+  - format: tar.gz
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    files:
+      - LICENSE
+      - README.md
+      - cmd/**
+
+
+release:
+  github:
+    owner: globalblackbox
+    name: gbx
+  draft: false
+  prerelease: auto
+changelog:
+  use: git
+
+brews:
+  - repository:
+      owner: globalblackbox
+      name: globalblackbox/homebrew-tap
+    commit_author:
+      name: Victor Bogo
+      email: victor@globalblackbox.io
+    install: |
+      bin.install "gbx"
