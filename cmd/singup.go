@@ -37,7 +37,7 @@ func runSignup() {
 	docStyle := lipgloss.NewStyle().
 		Italic(true).
 		Foreground(lipgloss.Color("#A9A9A9")) // Medium Grey
-	fmt.Println(docStyle.Render("For more information on subscription plans, visit: https://docs.globalblackbox.io/plans/\n"))
+	fmt.Println(docStyle.Render("For more information on subscription plans, visit: https://globalblackbox.io/docs/plans/\n"))
 
 	email, err := promptEmail()
 	if err != nil {
