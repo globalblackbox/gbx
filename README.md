@@ -4,25 +4,26 @@ This project hosts the code for gbx, the [Global Blackbox](https://globalblackbo
 
 # Installation
 
-## MacOS
+## Homebrew
 
-MacOS users can easily install gbx using homewbrew:
+gbx can be easily installed using homebrew:
 ```bash
 brew install globalblackbox/tap/gbx
 ```
 
 ## Others
 
-You can simply download the binary from the releases page and move it the most appropriate directory:
+Alternatively, you can simply download the binary from the releases page and move it the most appropriate directory:
 ```bash
 VERSION="0.1.5"
 ARCH="amd64"
 OS="linux"
-wget https://github.com/globalblackbox/gbx/releases/download/v$VERSION/gbx_$VERSION\_$OS\_$ARCH.tar.gz -qO- | tar xvfz - gbx
+wget https://github.com/globalblackbox/gbx/releases/download/v$VERSION/gbx_$VERSION\_$OS\_$ARCH.tar.gz -qO- | \
+tar xvfz - gbx
 mv ./gbx /usr/local/bin
 ```
 
-gbx should now be available:
+and it should now be available:
 ```bash
 gbx --help
 GBX allows you to sign up, manage your account,
